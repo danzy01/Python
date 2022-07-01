@@ -5,7 +5,11 @@
 from abc import ABC, abstractmethod
 import math as mth
 import mysql.connector
-
+def tpl_to_str(a):
+    str=""
+    for i in a:
+        str = str + " " + i
+    return str
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
 
@@ -19,33 +23,67 @@ if __name__ == '__main__':
         print('Polaczenie nie zostalo nawiazane z baza danych')
 
     cur = data.cursor()
+
+    """   STARTER DO PRZEROBKI
         #print(cur.execute("SELECT name FROM users;"))
     try:
         cur.execute("CREATE TABLE customers (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), address VARCHAR(255))")
     except:
         pass
         #SELECT
-
-
+    """
+    z = ["Client1", "Client2"]
+    b = ["VARCHAR(255)", "VARCHAR(255)"]
+    x = tuple(b)
+    drg = tuple(z)
+    nazwa = "Awesome"
     opcja = int(input("Podaj opcje: "))
     while opcja != 0:
         if opcja == 1:
-            cur.execute("SELECT * FROM customers")
-            myresult = cur.fetchall()
-            print(myresult)
+            bing = "SELECT {},{} FROM {nazwaa}".format(*drg,nazwaa=nazwa)
+            emk = ["{}"]*3
+            str_tst = tpl_to_str(tuple(emk))
+            ciekawe = "no {}".format(str_tst)
+            print(ciekawe.format(1,2,3))
+            print(bing)
+            #cur.execute("SELECT {},{} FROM {nazwaa}".format(nazwaa=nazwa))
+            #myresult = cur.fetchall()
+            #print(myresult)
             #for x in myresult:
                 #print(x)
-            #INSERT
+            #INSERT , WISE CREATION
         if opcja == 2:
-                pass
+
+                #val = len(z)-1
+                str = ""
+
+                i=0
+                while i <= 1:
+                    if i < 1:
+                        str = str+drg[i]+ " " + x[i] + ","
+                        i = i+1
+                    if i == 1:
+                        str = str + drg[i] + " " + x[i]
+                        i= i+1
+                print(str)
+                beg = "CREATE TABLE {nazwaa} (id INT AUTO_INCREMENT PRIMARY KEY,".format(nazwaa=nazwa)+str+")"
+                sql_in = "INSERT INTO {name} ({str}) VALUES ()".format(name=nazwa, str=str)
+                print(beg)
+                print(sql_in)
+                #try:
+                 #   cur.execute(beg)
+                #except:
+                 #   print("fail")
+
+        ## INPUTING
         if opcja == 3:
             name = input('Enter name: ')
             postcode = input('Enetr post-code: ')
             val = (name, postcode)
-            sql_in = "INSERT INTO customers (name, address) VALUES (%s, %s)"
-            cur.execute(sql_in, val)
+            sql_in = "INSERT INTO {name} ({str}) VALUES ()".format(name=name,str = str)
+            #cur.execute(sql_in, val)
 
-            data.commit()
+            #data.commit()
         opcja = int(input("Podaj opcje: "))
 
 """
