@@ -5,12 +5,32 @@
 from abc import ABC, abstractmethod
 import math as mth
 import mysql.connector
+
+def uni_split(k):
+    counter_comma = 0
+    counter_space = 0
+    logic = 0
+    for i in k:
+        if i ==",":
+            return k.split(",")
+            logic = 1
+            break
+        if i == "(":
+            return k.split("()")
+            logic = 1
+            break
+    if logic == 0:
+        return k.split()
+
+
+
 def tpl_to_str(a):
     str=""
     for i in a:
         str = str + " " + i
     return str
 # Press the green button in the gutter to run the script.
+""""
 def conv_to_parstr(nazwy):
     str_temp = ""
 
@@ -26,11 +46,11 @@ def conv_to_parstr(nazwy):
             str_temp = str_temp + drg[i] + " "
             i = i + 1
     return str_temp
-
+"""
 def insert_data(data:mysql.connector.connection_cext.CMySQLConnection,nazwa):
     columns = input('Enter your column names with comma {,} eg.( Name,Surname ):')
-    data = input('Enter data for your columns with space: eg. (data_column1 data_column2) :'.format(columns))
-    sql_in_data = data.split()
+    dataa = input('Enter data for your columns with space: eg. (data_column1 data_column2) :'.format(columns))
+    sql_in_data = dataa.split()
     num = columns.split(',')
     ilosc = int(len(num))
     print(ilosc)
@@ -50,8 +70,8 @@ def insert_data(data:mysql.connector.connection_cext.CMySQLConnection,nazwa):
 
     try:
         print(sql_in)
-        #data.cursor().execute(beg)
-        #data.commit()
+        data.cursor().execute(sql_in)
+        data.commit()
     except:
         print("fail")
 
@@ -85,6 +105,7 @@ def config_data(data:mysql.connector.connection_cext.CMySQLConnection):
     #Proba utworzenia tabeli
     try:
         data.cursor().execute(beg)
+        return name_table
     except:
         print('Unable to create table of data')
 
@@ -101,81 +122,45 @@ if __name__ == '__main__':
     except:
         print('Polaczenie nie zostalo nawiazane z baza danych')
 
-    #cur = data.cursor()
-
-
-    """   STARTER DO PRZEROBKI
-        #print(cur.execute("SELECT name FROM users;"))
-    try:
-        cur.execute("CREATE TABLE customers (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), address VARCHAR(255))")
-    except:
-        pass
-        #SELECT
-    """
-    z = ["Client1", "Client2"]
-    b = ["VARCHAR(255)", "VARCHAR(255)"]
-    x = tuple(b)
-    drg = tuple(z)
-    nazwa = "Awesome"
     opcja = int(input("Podaj opcje: "))
+    z="a b c defg h"
+    u="(a bk) (cdef) (ak)"
     while opcja != 0:
         #Configuration
         if opcja == 1:
-
+            #print('z',uni_split(z))
+            #print('u:',uni_split(u))
             config_data(data)
-            #print(good_config(nazwa,drg))
-            #print(type(data))
-            #bing = "SELECT {},{} FROM {nazwaa}".format(*drg,nazwaa=nazwa)
-            #emk = ["{}"]*3
-            #str_tst = tpl_to_str(tuple(emk))
-            #ciekawe = "no {}".format(str_tst)
-            #print(ciekawe.format(1,2,3))
-            #print(bing)
-            #cur.execute("SELECT {},{} FROM {nazwaa}".format(nazwaa=nazwa))
-            #myresult = cur.fetchall()
-            #print(myresult)
-            #for x in myresult:
-                #print(x)
+
             #INSERT , WISE CREATION
 
         if opcja == 2:
-                insert_data(data,nazwa)
-                """
-                #val = len(z)-1
-                str = ""
+            mycursor = data.cursor()
 
-                i=0
+            mycursor.execute("Show tables;")
 
-                ilosc = int(len(drg))-1
-                while i <= ilosc:
-                    
-                    if i < ilosc:
-                        str = str+drg[i]+ " " + x[i] + ","
-                        i = i+1
-                    if i == 1:
-                        str = str + drg[i] + " " + x[i]
-                        i= i+1
-                #print(str)
-                print('Funkcja:',conv_to_parstr(drg))
-                beg = "CREATE TABLE {nazwaa} (id INT AUTO_INCREMENT PRIMARY KEY,".format(nazwaa=nazwa)+str+")"
-                sql_in = "INSERT INTO {name} ({str}) VALUES ()".format(name=nazwa, str=str)
-                #print(beg)
-                #print(sql_in)
+            myresult = mycursor.fetchall()
 
-                #try:
-                 #   cur.execute(beg)
-                #except:
-                 #   print("fail")
-        """
-        ## INPUTING
+            for x in myresult:
+                print(x)
+
+            nazwa_tab = input('Podaj nazwe tabeli do  ktorj chcesz dane:')
+            mycursor.execute("SELECT * FROM {} LIMIT 0".format(nazwa_tab))
+            mycursor.fetchall()
+            print('W tabeli znajduja sie nastepujace kolumny')
+            print(mycursor.description)
+
+            ##Data Insterin"
+            insert_data(data,nazwa_tab)
+
+        ## Select
         if opcja == 3:
-            name = input('Enter name: ')
-            postcode = input('Enetr post-code: ')
-            val = (name, postcode)
-            sql_in = "INSERT INTO {name} ({str}) VALUES ()".format(name=name,str = str)
-            #cur.execute(sql_in, val)
+            ent=input('Enter:')
+            if ent == "":
+                print("sexy")
+            pass
 
-            #data.commit()
+
         opcja = int(input("Podaj opcje: "))
 
 """
